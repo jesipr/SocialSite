@@ -31,10 +31,12 @@
                     <h5 class="card-title mb-1">
                         <a href="{% url 'room' room.id %}">{{ room.name }}</a>
                     </h5>
+                    {% if request.user == room.host %}
                     <div>
                         <a class="btn btn-sm btn-outline-secondary" href="{% url 'update-room' room.id %}">Edit</a>
                         <a class="btn btn-sm btn-outline-danger" href="{% url 'delete-room' room.id %}">Delete</a>
                     </div>
+                    {% endif %}
                 </div>
                 <h6 class="card-subtitle mb-2 text-muted">{{ room.topic }}</h6>
                 <p class="card-text"><small class="text-muted">@{{room.host.username}}</small></p>
