@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(source venv/bin/activate)",
+      "Bash(ruff check .)",
+      "Bash(python manage.py check)",
+      "Bash(gh auth status)"
+    ]
+  }
+}
