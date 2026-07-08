@@ -1,12 +1,14 @@
 {% extends 'main.html' %}
 {% block content %}
-<div>
-    <form method="POST" action="">
-        {% csrf_token %}
-        <p>Are you sure you want to delete "{{obj}}"?</p>
+<div class="card">
+    <div class="card-body">
+        <form method="POST" action="">
+            {% csrf_token %}
+            <p>Are you sure you want to delete "{{obj}}"?</p>
 
-        <a href="{{request.META.HTTP_REFERER}}">Go back</a>
-        <input type="submit" value="Confirm" />
-    </form>
+            <a class="btn btn-secondary" href="{{request.META.HTTP_REFERER}}">Go back</a>
+            <button type="submit" class="btn btn-danger">Confirm</button>
+        </form>
+    </div>
 </div>
 {% endblock content %}

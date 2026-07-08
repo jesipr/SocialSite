@@ -2,6 +2,12 @@
 
 {% block content %}
 
-<h1>{{room.name}}</h1>
+<div class="card">
+    <div class="card-body">
+        <h1 class="card-title">{{room.name}}</h1>
+        <h6 class="card-subtitle mb-2 text-muted">{{room.topic}}</h6>
+        <p class="card-text">{{room.description}}</p>
+    </div>
+</div>
 
 {% endblock %}

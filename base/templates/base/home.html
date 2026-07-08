@@ -2,44 +2,43 @@
 
 {% block content %}
 
-<style>
-    .home-container {
-        display: grid;
-        grid-template-columns: 1fr 3fr;
-    }
-</style>
+<div class="row">
 
-<div class="home-container">
-
-    <div>
-        <h3>Browse Topics</h3>
+    <div class="col-md-3 mb-4">
+        <h5>Browse Topics</h5>
         <hr>
-        
-        <div>
-            <a href="{% url 'home' %}"> All </a>
-        </div>
-        {% for topic in topics %}
-            <div>
-                <a href="{% url 'home' %}?q={{ topic.name }}">{{ topic.name }}</a>
-            </div>
-        {% endfor %}
-    </div>
 
-    <div>
-         <h5>{{room_count}} rooms available</h5>
-        <a href="{% url 'create-room' %}">Create Room</a>
-        <div>
-            {% for room in rooms %}
-            <div>
-                <a href="{% url 'update-room' room.id %}">Edit</a>
-                <a href="{% url 'delete-room' room.id %}">Delete</a>
-                <span>@{{room.host.username}}</span>
-                <h5>{{ room.id }} -- <a href="{% url 'room' room.id %}">{{ room.name }}</a></h5>
-                <small>{{ room.topic }}</small>
-                <hr>
-            </div>
+        <div class="list-group">
+            <a class="list-group-item list-group-item-action" href="{% url 'home' %}">All</a>
+            {% for topic in topics %}
+                <a class="list-group-item list-group-item-action" href="{% url 'home' %}?q={{ topic.name }}">{{ topic.name }}</a>
             {% endfor %}
         </div>
+    </div>
+
+    <div class="col-md-9">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">{{room_count}} rooms available</h5>
+            <a class="btn btn-primary" href="{% url 'create-room' %}">Create Room</a>
+        </div>
+
+        {% for room in rooms %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <h5 class="card-title mb-1">
+                        <a href="{% url 'room' room.id %}">{{ room.name }}</a>
+                    </h5>
+                    <div>
+                        <a class="btn btn-sm btn-outline-secondary" href="{% url 'update-room' room.id %}">Edit</a>
+                        <a class="btn btn-sm btn-outline-danger" href="{% url 'delete-room' room.id %}">Delete</a>
+                    </div>
+                </div>
+                <h6 class="card-subtitle mb-2 text-muted">{{ room.topic }}</h6>
+                <p class="card-text"><small class="text-muted">@{{room.host.username}}</small></p>
+            </div>
+        </div>
+        {% endfor %}
     </div>
 
 </div>
