@@ -1,7 +1,11 @@
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.db.models import Q
 from django.shortcuts import redirect, render
 
-from .forms import RoomForm
+from .forms import MyUserCreationForm, RoomForm
 from .models import Room, Topic
 
 # Create your views here.
@@ -11,6 +15,49 @@ rooms = [
     {'id': 2, 'name': 'Design with me'},
     {'id': 3, 'name': 'Frontend developers'},
 ]
+
+def loginPage(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+
+    if request.method == 'POST':
+        username = request.POST.get('username').lower()
+        password = request.POST.get('password')
+
+        try:
+            User.objects.get(username=username)
+        except User.DoesNotExist:
+            messages.error(request, 'User does not exist')
+            return render(request, 'base/login_register.html', {'page': 'login'})
+
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.error(request, 'Username or password is incorrect')
+
+    return render(request, 'base/login_register.html', {'page': 'login'})
+
+def logoutUser(request):
+    logout(request)
+    return redirect('home')
+
+def registerPage(request):
+    form = MyUserCreationForm()
+
+    if request.method == 'POST':
+        form = MyUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.error(request, 'An error occurred during registration')
+
+    return render(request, 'base/login_register.html', {'form': form})
 
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') is not None else ''
@@ -36,6 +83,7 @@ def room(request, pk):
     context = {'room': room}
     return render(request, "base/room.html", context)
 
+@login_required(login_url='login')
 def createRoom(request):
     form = RoomForm()
 
@@ -48,6 +96,7 @@ def createRoom(request):
     context = {'form': form}
     return render(request, "base/room_form.html", context)
 
+@login_required(login_url='login')
 def updateRoom(request, pk):
     room = Room.objects.get(id=pk)
     form = RoomForm(instance=room)
@@ -61,6 +110,7 @@ def updateRoom(request, pk):
     context = {'form': form}
     return render(request, "base/room_form.html", context)
 
+@login_required(login_url='login')
 def deleteRoom(request, pk):
     room = Room.objects.get(id=pk)
     if request.method == 'POST':
